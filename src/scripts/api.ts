@@ -1,3 +1,13 @@
+/**
+ *
+ * https://code.conax.dev/api/v2/execute
+ *
+ */
+
+import type VirtualFileSystem from "./vfs.js";
+
+const API_URL = "https://code.conax.dev/api/v2/execute";
+
 interface ExecutePythonResult {
   stdout: string;
   stderr: string;
@@ -6,20 +16,21 @@ interface ExecutePythonResult {
 }
 
 export async function executePython(
-  code: string
+  vfs: VirtualFileSystem
 ): Promise<ExecutePythonResult> {
+  const files = vfs.files.map((file) => ({
+    name: file.name,
+    content: file.content,
+    encoding: "utf8",
+  }));
+
   const body = {
     language: "python",
     version: "3",
-    files: [
-      {
-        name: "main.py",
-        content: code,
-      },
-    ],
+    files,
   };
 
-  const resp = await fetch("https://code.conax.dev/api/v2/execute", {
+  const resp = await fetch(API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
