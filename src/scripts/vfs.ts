@@ -92,6 +92,7 @@ class VirtualFileSystem {
   renameFile(file: VirtualFile, newName: string) {
     file.name = newName;
     file.tab.textContent = newName;
+    file.tab.href = "#" + newName;
   }
 
   removeFile(file: VirtualFile) {
